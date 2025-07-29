@@ -19,12 +19,13 @@
 - 项目使用对等依赖 `minidev` 和 `miniprogram-ci`
 
 ### 可用的 CLI 工具
-项目安装后提供 5 个 CLI 工具：
+项目安装后提供 6 个 CLI 工具：
 - `hctoolkit-uniapp-manifest-updater` - 更新 UniApp manifest.json 版本信息
 - `hctoolkit-mp-alipay-uploader` - 上传到支付宝小程序平台
 - `hctoolkit-mp-weixin-uploader` - 上传到微信小程序平台
 - `hctoolkit-uniapp-mp-alipay-dev-helper` - 生成支付宝开发配置，支持页面导出
 - `hctoolkit-uniapp-homepage-configurator` - 配置小程序首页
+- `hctoolkit-uniapp-update-custom-icon-files` - 更新 UniApp 自定义图标文件
 
 ## 架构
 
@@ -36,6 +37,7 @@
   - `mp-weixin-uploader.js` - 微信小程序上传器
   - `uniapp-mp-alipay-dev-helper.js` - 支付宝开发助手
   - `uniapp-homepage-configurator.js` - 首页配置工具
+  - `uniapp-update-custom-icon-files.js` - UniApp 自定义图标文件更新工具
 
 - `bin/` - 封装 lib 类的 CLI 可执行脚本
 - `scripts/` - 构建和准备脚本

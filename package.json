@@ -9,7 +9,7 @@
     "hctoolkit-uniapp-mp-alipay-dev-helper": "bin/uniapp-mp-alipay-dev-helper.js",
     "hctoolkit-mp-weixin-uploader": "bin/mp-weixin-uploader.js",
     "hctoolkit-uniapp-homepage-configurator": "bin/uniapp-homepage-configurator.js",
-    "uniapp-update-custom-icon-files": "bin/uniapp-update-custom-icon-files.js"
+    "hctoolkit-uniapp-update-custom-icon-files": "bin/uniapp-update-custom-icon-files.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
