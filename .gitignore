@@ -71,4 +71,7 @@ Thumbs.db
 test/
 __tests__/
 *.test.js
-*.spec.js 
+*.spec.js
+
+/download.zip
+/src/
