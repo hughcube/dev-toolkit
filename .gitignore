@@ -33,6 +33,9 @@ build/Release
 node_modules/
 jspm_packages/
 
+# 本项目统一用 npm，不使用 yarn
+yarn.lock
+
 # Optional npm cache directory
 .npm
 
