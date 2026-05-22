@@ -105,32 +105,28 @@ manifest 更新器与 UniApp 的 `src/manifest.json` 文件配合工作，更新
 
 ## NPM 发布流程
 
-当需要发布新版本到 npm 时，请按以下步骤操作：
-
-1. **修改版本号**：更新 `package.json` 中的 `version` 字段
-2. **提交更改**：将所有更改提交到 git
-3. **创建标签**：创建新的 git tag 并推送到远程仓库
-4. **发布到 npm**：执行 `npm publish` 命令
+发布已通过 GitHub Actions 自动化：推送 `v*` tag 即触发 `.github/workflows/publish.yml`，
+经 npm Trusted Publishing (OIDC) 发布，**无需 token、无需本地 `npm publish`、无需 `npm login`**。
 
 ### 具体命令示例：
 
 ```bash
-# 1. 修改 package.json 版本号（手动编辑）
-# 2. 提交更改
-git add .
-git commit -m "版本更新: 更新到 vX.X.X"
+# 1. 升版本号（同步更新 package.json 与 package-lock.json，不自动打 tag）
+npm version patch --no-git-tag-version
 
-# 3. 创建标签并推送
-git tag vX.X.X
+# 2. 提交并推送到 master
+git add package.json package-lock.json
+git commit -m "chore: 发布 vX.X.X"
 git push origin master
-git push origin vX.X.X
 
-# 4. 发布到 npm
-npm publish
+# 3. 打 tag 触发 CI 自动发布
+git tag vX.X.X
+git push origin vX.X.X
 ```
 
 ### 注意事项：
-- 确保版本号遵循语义化版本规范 (SemVer)
-- 提交信息应该清晰描述更改内容
-- 标签名称应该与 package.json 中的版本号保持一致
-- 发布前确保代码已经过充分测试
+- 版本号遵循语义化版本规范 (SemVer)
+- tag 名去掉 `v` 后必须与 `package.json` 的 `version` 完全一致，否则 workflow 的校验步骤会失败
+- workflow 会先执行 `npm ci` 与 `npm test`，测试不通过不会发布
+- 发布凭证走 Trusted Publishing (OIDC)，在 npmjs.com 包页面的 Trusted Publisher 中配置（一次性）
+- 监控发布：`gh run watch --workflow=publish.yml`
