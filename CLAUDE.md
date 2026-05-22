@@ -105,8 +105,8 @@ manifest 更新器与 UniApp 的 `src/manifest.json` 文件配合工作，更新
 
 ## NPM 发布流程
 
-发布完全由 GitHub Actions 处理。**版本号的唯一来源是 git tag**；
-`package.json` 的 `version` 字段是占位符（`0.0.0`），不需要维护。
+发布由 GitHub Actions 处理。**版本号的来源是 git tag**；发布成功后 CI 会把版本号回写到 master，
+所以 master 上 `package.json` 的 `version` 始终是最近一次发布的版本，无需手动维护。
 
 ### 发新版只需一步：打并推送一个 tag
 
@@ -116,12 +116,14 @@ git push origin v1.0.19
 ```
 
 推送 `v*` tag 即触发 `.github/workflows/publish.yml`，它会：
-1. 从 tag 名解析版本号（去掉 `v`），写入 package.json（仅 CI 工作副本，不回写仓库）
+1. 从 tag 名解析版本号（去掉 `v`）写入 package.json
 2. 执行 `npm ci` + `npm test`，测试不通过则中止
 3. 经 npm Trusted Publishing (OIDC) 发布该版本，**无需 token、无需 `npm login`**
+4. 发布成功后，由 `github-actions[bot]` 把该版本号提交回 master
 
 ### 注意事项：
 - tag 必须形如 `vX.X.X`（带 `v` 前缀），去掉 `v` 后即为发布到 npm 的版本号
 - 版本号需自行保证递增且未发布过 —— npm 不允许覆盖已发布版本
-- 发布凭证走 Trusted Publishing (OIDC)，在 npmjs.com 包页面的 Trusted Publisher 中配置（一次性，已完成）
+- 不需要手动改 `package.json` 的 `version`，它由 CI 维护
+- 发布凭证走 Trusted Publishing (OIDC)，已在 npmjs.com 配置（一次性）
 - 监控发布：`gh run watch --workflow=publish.yml`
