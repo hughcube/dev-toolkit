@@ -20,7 +20,7 @@
 - 测试覆盖各工具的纯逻辑方法（版本号计算、参数映射、页面路径匹配等），
   通过 `Object.create(Class.prototype)` 绕过依赖 `process.argv` 的构造函数
 - 运行测试需要 Node 18+（不影响发布包的 `engines` 要求 >=14）
-- CI：每次 push 到 master 与每个 PR 都会在 Node 18/20/22 上自动跑测试（`.github/workflows/ci.yml`）
+- CI：每次 push 到 master 与每个 PR 都会在 Node 18/20/22/24 上自动跑测试（`.github/workflows/ci.yml`）
 - 项目使用对等依赖 `minidev` 和 `miniprogram-ci`
 
 ### 可用的 CLI 工具
