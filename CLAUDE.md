@@ -105,28 +105,23 @@ manifest 更新器与 UniApp 的 `src/manifest.json` 文件配合工作，更新
 
 ## NPM 发布流程
 
-发布已通过 GitHub Actions 自动化：推送 `v*` tag 即触发 `.github/workflows/publish.yml`，
-经 npm Trusted Publishing (OIDC) 发布，**无需 token、无需本地 `npm publish`、无需 `npm login`**。
+发布完全由 GitHub Actions 处理。**版本号的唯一来源是 git tag**；
+`package.json` 的 `version` 字段是占位符（`0.0.0`），不需要维护。
 
-### 具体命令示例：
+### 发新版只需一步：打并推送一个 tag
 
 ```bash
-# 1. 升版本号（同步更新 package.json 与 package-lock.json，不自动打 tag）
-npm version patch --no-git-tag-version
-
-# 2. 提交并推送到 master
-git add package.json package-lock.json
-git commit -m "chore: 发布 vX.X.X"
-git push origin master
-
-# 3. 打 tag 触发 CI 自动发布
-git tag vX.X.X
-git push origin vX.X.X
+git tag v1.0.19
+git push origin v1.0.19
 ```
 
+推送 `v*` tag 即触发 `.github/workflows/publish.yml`，它会：
+1. 从 tag 名解析版本号（去掉 `v`），写入 package.json（仅 CI 工作副本，不回写仓库）
+2. 执行 `npm ci` + `npm test`，测试不通过则中止
+3. 经 npm Trusted Publishing (OIDC) 发布该版本，**无需 token、无需 `npm login`**
+
 ### 注意事项：
-- 版本号遵循语义化版本规范 (SemVer)
-- tag 名去掉 `v` 后必须与 `package.json` 的 `version` 完全一致，否则 workflow 的校验步骤会失败
-- workflow 会先执行 `npm ci` 与 `npm test`，测试不通过不会发布
-- 发布凭证走 Trusted Publishing (OIDC)，在 npmjs.com 包页面的 Trusted Publisher 中配置（一次性）
+- tag 必须形如 `vX.X.X`（带 `v` 前缀），去掉 `v` 后即为发布到 npm 的版本号
+- 版本号需自行保证递增且未发布过 —— npm 不允许覆盖已发布版本
+- 发布凭证走 Trusted Publishing (OIDC)，在 npmjs.com 包页面的 Trusted Publisher 中配置（一次性，已完成）
 - 监控发布：`gh run watch --workflow=publish.yml`
