@@ -37,7 +37,4 @@ yarn-error.log*
 
 # Coverage
 coverage/
-.nyc_output
-
-# Original script files (已移动到bin和lib目录)
-*.js 
+.nyc_output 
