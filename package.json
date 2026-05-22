@@ -12,7 +12,7 @@
     "hctoolkit-uniapp-update-custom-icon-files": "bin/uniapp-update-custom-icon-files.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --test",
     "prepare": "node scripts/prepare.js"
   },
   "keywords": [

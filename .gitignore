@@ -67,11 +67,5 @@ Thumbs.db
 *.swo
 *~
 
-# Test files
-test/
-__tests__/
-*.test.js
-*.spec.js
-
 /download.zip
 /src/

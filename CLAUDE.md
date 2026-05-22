@@ -15,7 +15,11 @@
 - `node scripts/prepare.js` - 准备开发环境
 
 ### 测试
-- 未配置测试框架（package.json 中显示占位符测试脚本）
+- `npm test` - 运行测试套件（基于 Node 内置 test runner，执行 `node --test`）
+- 测试文件位于 `test/` 目录，命名为 `*.test.js`
+- 测试覆盖各工具的纯逻辑方法（版本号计算、参数映射、页面路径匹配等），
+  通过 `Object.create(Class.prototype)` 绕过依赖 `process.argv` 的构造函数
+- 运行测试需要 Node 18+（不影响发布包的 `engines` 要求 >=14）
 - 项目使用对等依赖 `minidev` 和 `miniprogram-ci`
 
 ### 可用的 CLI 工具
