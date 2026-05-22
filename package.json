@@ -1,6 +1,6 @@
 {
   "name": "@hughcube/dev-toolkit",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "description": "一套完整的开发工具集，包含小程序版本管理、代码上传、开发配置等功能",
   "main": "lib/index.js",
   "bin": {
