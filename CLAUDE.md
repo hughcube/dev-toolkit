@@ -20,7 +20,7 @@
 - 测试覆盖各工具的纯逻辑方法（版本号计算、参数映射、页面路径匹配等），
   通过 `Object.create(Class.prototype)` 绕过依赖 `process.argv` 的构造函数
 - 运行测试需要 Node 18+（不影响发布包的 `engines` 要求 >=14）
-- CI：每次 push 到 master 与每个 PR 都会在 Node 18/20/22/24/26 上自动跑测试（`.github/workflows/ci.yml`）
+- CI：push 到 master、PR、打 tag 都会在 Node 18/20/22/24/26 上自动跑测试（`.github/workflows/publish.yml` 的 test job）
 - 项目使用对等依赖 `minidev` 和 `miniprogram-ci`
 
 ### 可用的 CLI 工具
@@ -116,11 +116,12 @@ git tag v1.0.19
 git push origin v1.0.19
 ```
 
-推送 `v*` tag 即触发 `.github/workflows/publish.yml`，它会：
-1. 从 tag 名解析版本号（去掉 `v`）写入 package.json
-2. 执行 `npm ci` + `npm test`，测试不通过则中止
-3. 经 npm Trusted Publishing (OIDC) 发布该版本，**无需 token、无需 `npm login`**
-4. 发布成功后，由 `github-actions[bot]` 把该版本号提交回 master
+推送 `v*` tag 即触发 `.github/workflows/publish.yml`：
+1. **test job**：在 Node 18/20/22/24/26 上跑测试矩阵
+2. **publish job**（`needs: test`，测试矩阵全绿才执行）：
+   - 从 tag 名解析版本号写入 package.json
+   - 经 npm Trusted Publishing (OIDC) 发布该版本，**无需 token、无需 `npm login`**
+   - 发布后由 `github-actions[bot]` 把版本号提交回 master
 
 ### 注意事项：
 - tag 必须形如 `vX.X.X`（带 `v` 前缀），去掉 `v` 后即为发布到 npm 的版本号
