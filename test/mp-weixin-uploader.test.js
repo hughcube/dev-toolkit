@@ -4,6 +4,9 @@
 
 const test = require('node:test')
 const assert = require('node:assert/strict')
+const fs = require('fs')
+const path = require('path')
+const os = require('os')
 
 const MpWeixinUploader = require('../lib/mp-weixin-uploader')
 
@@ -100,3 +103,62 @@ test('parseSettingArgs', async (t) => {
         assert.deepEqual(uploader.settings, {})
     })
 })
+
+test('MpWeixinUploader - resolveVersionFromConfig', async (t) => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'hctoolkit-weixin-'))
+    const isolatedCwd = fs.mkdtempSync(path.join(os.tmpdir(), 'hctoolkit-isolated-wx-'))
+    const origCwd = process.cwd()
+
+    t.after(() => {
+        process.chdir(origCwd)
+        fs.rmSync(tempDir, { recursive: true, force: true })
+        fs.rmSync(isolatedCwd, { recursive: true, force: true })
+    })
+
+    process.chdir(tempDir)
+
+    await t.test('未提供 version 时自动从 src/manifest.json 读取版本号', () => {
+        fs.mkdirSync(path.join(tempDir, 'src'), { recursive: true })
+        fs.writeFileSync(path.join(tempDir, 'src/manifest.json'), '{\n  // 注释\n  "versionName": "2.3.4"\n}')
+
+        const uploader = createInstance()
+        uploader.version = null
+        uploader.distDir = null
+
+        const ver = uploader.resolveVersionFromConfig()
+        assert.equal(ver, '2.3.4')
+    })
+
+    await t.test('从标准三层构建路径 (dist/build/mp-weixin) 向上逐级探测项目配置 (与 cwd 隔离)', () => {
+        process.chdir(isolatedCwd)
+
+        const projectDir = path.join(tempDir, 'nested-project')
+        const distDir = path.join(projectDir, 'dist/build/mp-weixin')
+        fs.mkdirSync(distDir, { recursive: true })
+        fs.mkdirSync(path.join(projectDir, 'src'), { recursive: true })
+        fs.writeFileSync(path.join(projectDir, 'src/manifest.json'), '{"versionName": "3.5.0"}')
+
+        const uploader = createInstance()
+        uploader.version = null
+        uploader.distDir = distDir
+
+        const ver = uploader.resolveVersionFromConfig()
+        assert.equal(ver, '3.5.0')
+
+        process.chdir(tempDir)
+    })
+
+    await t.test('从产物目录优先读取 project.config.json', () => {
+        const distDir = path.join(tempDir, 'wx-dist')
+        fs.mkdirSync(distDir, { recursive: true })
+        fs.writeFileSync(path.join(distDir, 'project.config.json'), '{"version": "6.0.0"}')
+
+        const uploader = createInstance()
+        uploader.version = null
+        uploader.distDir = distDir
+
+        const ver = uploader.resolveVersionFromConfig()
+        assert.equal(ver, '6.0.0')
+    })
+})
+
