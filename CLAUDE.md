@@ -25,9 +25,9 @@
 
 ### 可用的 CLI 工具
 项目安装后提供 6 个 CLI 工具：
-- `hctoolkit-uniapp-manifest-updater` - 更新 UniApp manifest.json 版本信息
-- `hctoolkit-mp-alipay-uploader` - 上传到支付宝小程序平台
-- `hctoolkit-mp-weixin-uploader` - 上传到微信小程序平台
+- `hctoolkit-uniapp-manifest-updater` - 更新 UniApp manifest.json 版本信息（原生内置三段式规范化截取/补齐与非法阻断）
+- `hctoolkit-mp-alipay-uploader` - 上传到支付宝小程序平台（支持自动从配置自省版本号）
+- `hctoolkit-mp-weixin-uploader` - 上传到微信小程序平台（支持自动从配置自省版本号）
 - `hctoolkit-uniapp-mp-alipay-dev-helper` - 生成支付宝开发配置，支持页面导出
 - `hctoolkit-uniapp-homepage-configurator` - 配置小程序首页
 - `hctoolkit-uniapp-update-custom-icon-files` - 更新 UniApp 自定义图标文件
